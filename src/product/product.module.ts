@@ -1,11 +1,13 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { BlockchainModule } from 'src/blockchain/blockchain.module';
 import { PrismaService } from 'src/prisma.service';
 import { ProductController } from './product.controller';
+import { ProductService } from './product.service';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [ConfigModule, forwardRef(() => BlockchainModule)],
   controllers: [ProductController],
-  providers: [PrismaService],
+  providers: [ProductService, PrismaService],
 })
 export class ProductModule {}

@@ -2,8 +2,10 @@ import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
 import { randomUUID } from 'node:crypto';
 import { CreateAuctionDto } from './dto/create-auction.dto';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
-@Controller('auction')
+@Controller('blockchain/auction')
+@ApiTags('auctions')
 export class AuctionController {
   constructor(private readonly prisma: PrismaService) {}
 
@@ -18,6 +20,7 @@ export class AuctionController {
   }
 
   @Post()
+  @ApiBody({ type: CreateAuctionDto })
   createProduct(@Body() dto: CreateAuctionDto) {
     console.log(dto);
 
