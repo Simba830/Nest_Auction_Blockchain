@@ -3,7 +3,7 @@ import { CreateAuctionDto } from './dto/create-auction.dto';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { AuctionService } from './auction.service';
 
-@Controller('blockchain/auction')
+@Controller('auction')
 @ApiTags('auctions')
 export class AuctionController {
   constructor(private readonly auctionService: AuctionService) {}
@@ -16,6 +16,11 @@ export class AuctionController {
   @Get(':id')
   getAuction(@Param('id') id: string): any {
     return this.auctionService.getAuctionById(id);
+  }
+
+  @Get('blockchain/:id')
+  getAuctionOnChain(@Param('id') id: string): any {
+    return this.auctionService.getAuctionOnChain(id);
   }
 
   @Post('initialize')

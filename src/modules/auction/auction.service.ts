@@ -25,12 +25,10 @@ export class AuctionService {
     try {
       const product = await this.getProductById(dto.productId);
 
-      const auction = await this.blockchainService.initializeAuction(
+      await this.blockchainService.initializeAuction(
         product.tokenId,
         dto.initialPrice,
       );
-      this.logger.log('Returned auction from blockchain', auction);
-
       return this.prisma.auction.create({
         data: {
           id: randomUUID(),
@@ -73,5 +71,10 @@ export class AuctionService {
   async getProductByAuctionId(auctionId: string): Promise<Product> {
     const auction = await this.getAuctionById(auctionId);
     return await this.productService.getProductsById(auction.productId);
+  }
+
+  async getAuctionOnChain(auctionId: string): Promise<any> {
+    const productToken = await this.getProductByAuctionId(auctionId);
+    return await this.blockchainService.getAuctionOnChain(productToken.tokenId);
   }
 }

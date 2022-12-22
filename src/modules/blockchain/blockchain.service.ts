@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
+import { isGeneratorFunction } from 'util/types';
 import { abi } from './Auction.json';
 
 @Injectable()
@@ -24,7 +25,7 @@ export class BlockchainService {
   /**
    * @description mounts the signer object related to admin wallet of contract and auctions
    */
-  getAdminCredentials(): ethers.Wallet {
+  private getAdminCredentials(): ethers.Wallet {
     const wallet = new ethers.Wallet(this.adminWallet);
     const signer = wallet.connect(this.provider);
     return signer;
@@ -33,7 +34,7 @@ export class BlockchainService {
   /**
    * @description mounts the signer object related to admin wallet of contract and auctions
    */
-  getAuctionContractInstance(): ethers.Contract {
+  private getAuctionContractInstance(): ethers.Contract {
     const signer = this.getAdminCredentials();
     return new ethers.Contract(this.contractAddress, this.contractABI, signer);
   }
@@ -51,7 +52,7 @@ export class BlockchainService {
       let tokenId = await auctionContract.getCurrentTokenId();
       tokenId++;
 
-      this.logger.log('creating product on blockchain..');
+      this.logger.log('creating product on blockchain for tokenId: ', tokenId);
       await auctionContract.createProductToken(name, seller);
 
       return tokenId;
@@ -99,5 +100,16 @@ export class BlockchainService {
     } catch (error) {
       this.logger.error(error);
     }
+  }
+
+  async getAuctionOnChain(tokenId: number): Promise<any> {
+    const auctionContract = this.getAuctionContractInstance();
+    this.logger.log(
+      'Requesting Auction data from blockchain for tokenId: ',
+      tokenId,
+    );
+    const auction = await auctionContract.getAuction(tokenId);
+    this.logger.log('Auction requested: ', auction);
+    return auction;
   }
 }

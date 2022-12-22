@@ -3,17 +3,17 @@ import { CreateBidDto } from './dto/create-bid.dto';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { BidService } from './bid.service';
 
-@Controller('blockchain')
+@Controller('bid')
 @ApiTags('bids')
 export class BidController {
   constructor(private readonly bidService: BidService) {}
 
-  @Get('bid/:id')
+  @Get(':id')
   getAuction(@Param('id') id: string): any {
     return this.bidService.getBidById(id);
   }
 
-  @Post('bid')
+  @Post()
   @ApiBody({ type: CreateBidDto })
   async createBid(@Body() dto: CreateBidDto) {
     console.log(dto);

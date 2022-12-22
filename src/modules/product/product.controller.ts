@@ -4,7 +4,7 @@ import { Product } from '@prisma/client';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductService } from './product.service';
 
-@Controller('blockchain/product')
+@Controller('product')
 @ApiTags('products')
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
