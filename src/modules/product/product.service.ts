@@ -1,6 +1,6 @@
 import { forwardRef, Inject, NotFoundException } from '@nestjs/common';
 import { Product } from '@prisma/client';
-import { BlockchainService } from 'src/blockchain/blockchain.service';
+import { BlockchainService } from 'src/modules/blockchain/blockchain.service';
 import { PrismaService } from 'src/prisma.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { randomUUID } from 'node:crypto';
@@ -16,7 +16,7 @@ export class ProductService {
     return this.prisma.product.findMany();
   }
 
-  async createAuctionProduct(dto: CreateProductDto): Promise<Product> {
+  async createProduct(dto: CreateProductDto): Promise<Product> {
     dto.tokenId = await this.blockchainService.createAuctionProductBlockchain(
       dto.name,
       dto.seller,

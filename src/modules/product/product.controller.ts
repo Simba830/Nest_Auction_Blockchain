@@ -22,6 +22,6 @@ export class ProductController {
   @Post()
   @ApiBody({ type: CreateProductDto })
   async createProduct(@Body() dto: CreateProductDto): Promise<Product> {
-    return await this.productService.createAuctionProduct(dto);
+    return await this.productService.createProduct(dto);
   }
 }

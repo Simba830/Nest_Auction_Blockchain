@@ -17,12 +17,14 @@ model Notification {
 }
 
 model Auction {
-  id        String   @id
-  product   Product  @relation(fields: productId, references: id)
-  productId String   @unique
-  createdAt DateTime @default(now())
-  updateAt  DateTime @updatedAt
-  bids      Bid[]
+  id           String   @id
+  product      Product  @relation(fields: productId, references: id)
+  productId    String   @unique
+  initialPrice Decimal
+  isListed     Boolean
+  createdAt    DateTime @default(now())
+  updateAt     DateTime @updatedAt
+  bids         Bid[]
 }
 
 model Bid {

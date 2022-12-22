@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsDecimal, IsNotEmpty, IsUUID } from 'class-validator';
+import { IsDecimal, IsNotEmpty, IsNumberString, IsUUID } from 'class-validator';
 
 export class CreateBidDto {
   @ApiProperty()
@@ -11,7 +11,7 @@ export class CreateBidDto {
   bidder: string;
 
   @ApiProperty()
-  @IsDecimal()
+  @IsNumberString()
   @IsNotEmpty()
-  value: number;
+  value: string;
 }
