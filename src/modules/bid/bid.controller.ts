@@ -16,8 +16,6 @@ export class BidController {
   @Post()
   @ApiBody({ type: CreateBidDto })
   async createBid(@Body() dto: CreateBidDto) {
-    console.log(dto);
-
     return await this.bidService.createBid(dto);
   }
 }

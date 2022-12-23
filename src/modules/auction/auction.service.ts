@@ -1,4 +1,10 @@
-import { forwardRef, Inject, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { Auction, Product } from '@prisma/client';
 import { BlockchainService } from 'src/modules/blockchain/blockchain.service';
 import { PrismaService } from 'src/prisma.service';
@@ -21,6 +27,11 @@ export class AuctionService {
     return this.prisma.auction.findMany();
   }
 
+  /**
+   * @description initialize auction on blockchain and persists the data on DB
+   * @param dto
+   * @returns {Auction}
+   */
   async initializeAuction(dto: CreateAuctionDto): Promise<Auction> {
     try {
       const product = await this.getProductById(dto.productId);
@@ -38,16 +49,25 @@ export class AuctionService {
       });
     } catch (error) {
       this.logger.error(
-        `Could not initialize Auction ${error.message}`,
+        'Could not initialize Auction ${error.message}',
         error.stack,
       );
+      throw new BadRequestException('Auction could not be initialized');
     }
   }
 
+  /**
+   * @param id
+   * @returns {Auction}
+   * @emits NotFoundException
+   */
   async getAuctionById(id: string): Promise<Auction> {
     const auction = await this.prisma.auction.findUnique({
       where: {
         id,
+      },
+      include: {
+        bids: true,
       },
     });
     if (!auction) {
@@ -56,6 +76,9 @@ export class AuctionService {
     return auction;
   }
 
+  /**
+   * @param id
+   */
   async deleteAuction(id: string) {
     await this.prisma.auction.delete({
       where: {
@@ -73,8 +96,26 @@ export class AuctionService {
     return await this.productService.getProductsById(auction.productId);
   }
 
+  /**
+   * @description retrieves Auction data from blockchain
+   * @param auctionId
+   * @returns [data]
+   * @emits NotFoundException
+   */
   async getAuctionOnChain(auctionId: string): Promise<any> {
-    const productToken = await this.getProductByAuctionId(auctionId);
-    return await this.blockchainService.getAuctionOnChain(productToken.tokenId);
+    try {
+      const productToken = await this.getProductByAuctionId(auctionId);
+      return await this.blockchainService.getAuctionOnChain(
+        productToken.tokenId,
+      );
+    } catch (error) {
+      this.logger.error(
+        `Auction could not be retrieved from chain  ${error.message}`,
+        error.stack,
+      );
+      throw new NotFoundException(
+        'Auction could not be retrieved or does not exist',
+      );
+    }
   }
 }

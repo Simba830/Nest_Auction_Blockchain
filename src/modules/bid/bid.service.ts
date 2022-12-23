@@ -1,4 +1,10 @@
-import { forwardRef, Inject, Logger, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  forwardRef,
+  Inject,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { Auction, Bid, Product } from '@prisma/client';
 import { BlockchainService } from 'src/modules/blockchain/blockchain.service';
 import { PrismaService } from 'src/prisma.service';
@@ -17,23 +23,19 @@ export class BidService {
     private readonly prisma: PrismaService,
   ) {}
 
-  getBidsByAuction(auctionId: string): Promise<Bid[]> {
-    return this.prisma.bid.findMany({
-      where: {
-        auctionId: auctionId,
-      },
-    });
-  }
-
+  /**
+   * @description request bid creation on blockchain and persists the data on DB
+   * @param CreateBidDto
+   * @returns {Bid}
+   * @emits BadRequestException
+   */
   async createBid(dto: CreateBidDto): Promise<Bid> {
     try {
-      const auction = await this.auctionService.getAuctionById(dto.auctionId);
       const tokenId = (
         await this.auctionService.getProductByAuctionId(dto.auctionId)
       ).tokenId;
       this.logger.log('Creating Bid on blockchain for TokenId', tokenId);
       await this.blockchainService.bid(tokenId, dto.value, dto.bidder);
-      this.logger.log('Returned auction from blockchain', auction);
 
       return this.prisma.bid.create({
         data: {
@@ -42,9 +44,9 @@ export class BidService {
         },
       });
     } catch (error) {
-      this.logger.error(
-        `Could not initialize Auction ${error.message}`,
-        error.stack,
+      this.logger.error(`Could not create Bid ${error.message}`, error.stack);
+      throw new BadRequestException(
+        'Auction is finalized or bid value is bellow',
       );
     }
   }
@@ -59,13 +61,5 @@ export class BidService {
       throw new NotFoundException();
     }
     return bid;
-  }
-
-  async deleteAuction(id: string) {
-    await this.prisma.auction.delete({
-      where: {
-        id,
-      },
-    });
   }
 }
