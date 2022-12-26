@@ -47,11 +47,10 @@ $ npm run start:dev
 
 4. **[POST] /bid :** create a Bid instance on DB to represents this action. When an auction reaches up to a specific number of bids the contract evaluate the bestBid and transfer the NFT Token from Administration Address to the Bidder winner address. Also, a ListPrice amount of 0.0001 ether is transferred to the seller. This amount is payed on initialize an auction.
 
-5. BidMaxNumber:
-   5.1 **[POST] /blockchain/max-bid-number:** used to update maximum number of bid for an auction. Default is 10. Only for tests I recommend to updated it to 3
-   5.2 **[GET] /blockchain/max-bid-number :** retrieves the actual bid number from blockchain
+5. **[POST] /blockchain/max-bid-number:** used to update maximum number of bid for an auction. Default is 10. Only for tests I recommend to updated it to 3
 
-6. ListPrice :
-   6.1 **[POST] /blockchain/list-price :** updates the listing price used on initializing an Auction.
+6. **[GET] /blockchain/max-bid-number :** retrieves the actual bid number from blockchain
+
+7. **[POST] /blockchain/list-price :** updates the listing price used on initializing an Auction.
    Default id 0.0001 ether
-   6.2 **[GET] /blockchain/list-price :** retrieves actual listPrice from blockchain
+8. **[GET] /blockchain/list-price :** retrieves actual listPrice from blockchain
