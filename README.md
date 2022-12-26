@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://assets-global.website-files.com/60118ca1c2eab61d24bcf151/6329c748f1e3f02c29c9a2a8_BP%20-%20NA%2BSM%20-%201R%20-%20Full%20(2).png" width="200" alt="Auction Logo" /></a>
+  <img src="https://assets-global.website-files.com/60118ca1c2eab61d24bcf151/6329c748f1e3f02c29c9a2a8_BP%20-%20NA%2BSM%20-%201R%20-%20Full%20(2).png" width="300" alt="Auction Logo" /></a>
 </p>
 
 # Auction Blockchain - Backend API
