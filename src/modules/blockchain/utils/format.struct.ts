@@ -11,6 +11,14 @@ function formatStruct(struct: any): any {
         return value;
       }
     });
+  } else {
+    if (typeof struct == 'string') {
+      return struct?.toLowerCase() ?? '';
+    } else if (ethers.BigNumber.isBigNumber(struct)) {
+      return struct.toNumber();
+    } else {
+      return struct;
+    }
   }
   return struct;
 }

@@ -1,7 +1,11 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { abi } from './Auction.json';
+import {
+  UpdateListPriceDto,
+  UpdateMaxBidNumberDto,
+} from './dto/config.blockchain.dto';
 import formatStruct from './utils/format.struct';
 
 @Injectable()
@@ -106,12 +110,11 @@ export class BlockchainService {
     this.logger.log('transacting a bid for tokenId: ', tokenId);
     const tx = await auctionContract.bid(
       tokenId,
-      //ethers.utils.parseUnits(bidPrice, 'ether'),
       ethers.utils.parseEther(bidPrice),
       bidderAddress,
       this.getGas(),
     );
-    //await tx.wait();
+    await tx.wait();
   }
 
   /**
@@ -128,5 +131,65 @@ export class BlockchainService {
     const auction = await auctionContract.getAuction(tokenId);
     this.logger.log('Auction retrieved for tokenId: ', tokenId);
     return formatStruct(auction);
+  }
+
+  /**
+   * @description retrieves list price info from chain
+   */
+  async getMaxBidNumber(): Promise<number> {
+    try {
+      const auctionContract = this.getAuctionContractInstance();
+      this.logger.log('Query requested - Max Bid Number');
+      const maxBid: number = await auctionContract.getMaxBidAuction();
+      return formatStruct(maxBid);
+    } catch (error) {
+      this.logger.error(
+        `MaxBidNumber could not be retrieved from chain  ${error.message}`,
+        error.stack,
+      );
+      throw new NotFoundException('');
+    }
+  }
+
+  /**
+   * @description updates the maximum bid number to trigger the winner selection and execute sale
+   * @param maxBidNumber
+   */
+  async updateMaxBidNumber(dto: UpdateMaxBidNumberDto): Promise<any> {
+    const auctionContract = this.getAuctionContractInstance();
+    this.logger.log(
+      'Update requested - Max bid number to : ',
+      dto.maxBidNumber,
+    );
+    await auctionContract.updateMaxBidNumber(dto.maxBidNumber);
+  }
+
+  /**
+   * @description retrieves list price info from chain
+   */
+  async getListPrice(): Promise<string> {
+    try {
+      const auctionContract = this.getAuctionContractInstance();
+      this.logger.log('Query requested - List Price');
+      const listPrice = await auctionContract.getListPrice();
+      return ethers.utils.formatEther(listPrice);
+    } catch (error) {
+      this.logger.error(
+        `ListPrice could not be retrieved from chain  ${error.message}`,
+        error.stack,
+      );
+      throw new NotFoundException('');
+    }
+  }
+  /**
+   * @description updates the maximum bid number to trigger the winner selection and execute sale
+   * @param maxBidNumber
+   */
+  async updateListPrice(dto: UpdateListPriceDto): Promise<any> {
+    const auctionContract = this.getAuctionContractInstance();
+    this.logger.log('Update requested - List Price to : ', dto.listPrice);
+    await auctionContract.updateListPrice(
+      ethers.utils.parseEther(dto.listPrice),
+    );
   }
 }

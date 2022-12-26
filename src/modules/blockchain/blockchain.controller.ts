@@ -1,20 +1,48 @@
 import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { BlockchainService } from './blockchain.service';
+import {
+  UpdateListPriceDto,
+  UpdateMaxBidNumberDto,
+} from './dto/config.blockchain.dto';
 
 @Controller('blockchain')
-@ApiTags('bids')
+@ApiTags('config-params')
 export class BlockchainController {
   constructor(private readonly blockchainService: BlockchainService) {}
 
   /**
-   * @description: Could be a PATCH but in this case we request blockchain to a uint256 data without id
+   * @description: Update maximum bid number on blockchain
    */
-  // @Post('/initial-price')
-  // @ApiBody({ type: CreateAuctionDto })
-  // async initializeAuction(@Body() dto: CreateAuctionDto) {
-  //   console.log(dto);
+  @Get('/max-bid-number')
+  async getMaxBidNumber() {
+    return await this.blockchainService.getMaxBidNumber();
+  }
+  /**
+   * @description: Update maximum bid number on blockchain
+   */
+  @Post('/max-bid-number')
+  @ApiBody({ type: UpdateMaxBidNumberDto })
+  async updateMaxBidNumber(@Body() dto: UpdateMaxBidNumberDto) {
+    return await this.blockchainService.updateMaxBidNumber(dto);
+  }
 
-  //   return await this.auctionService.initializeAuction(dto);
-  // }
+  /**
+   * @description: Update maximum bid number on blockchain
+   */
+  @Get('/list-price')
+  async getListPrice() {
+    return await this.blockchainService.getListPrice();
+  }
+
+  /**
+   * @description: Update maximum bid number on blockchain
+   */
+  @Post('/list-price')
+  @ApiBody({ type: UpdateListPriceDto })
+  async updateListPrice(@Body() dto: UpdateListPriceDto) {
+    console.log(dto);
+
+    return await this.blockchainService.updateListPrice(dto);
+  }
 }
