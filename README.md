@@ -13,7 +13,7 @@ API's are documented using **Swagger**. Default location http://localhost:3000/a
 
 The **ADMIN_WALLET** key is the same as used to deploy the Auction smart contract
 
-`I've generated a new wallet and set it on env.example file to facilitate the tests. This wallet was used to deploy an Auction smart contract as well. They are good to run and test, so migrate db and test thought Swagger.`
+`I've generated a new wallet and set it on env.example file to facilitate the tests. This wallet was used to deploy an Auction smart contract as well. They are good to run and test, so migrate db and test through Swagger.`
 
 ## Installation
 
