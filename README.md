@@ -37,6 +37,8 @@ $ npm run start:dev
 
 ### These are the full cycle steps to test an Auction
 
+`Check [here](https://goerli.etherscan.io/address/0x9E48a079a47Bd70E70639B0bCA359D6613efe487) the contract transactions`
+
 1. **[POST] /product :** to create a Product instance by contract persisting a Product on db. The contract also will mint a AUCT token for the administration address set on .env
 
 2. **[POST] /auction/initialize :** actually initialize an Auction. Persists it on DB and update the struct on blockchain setting it to Bid.

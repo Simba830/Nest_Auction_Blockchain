@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { BigNumber, ethers } from 'ethers';
-import { abi } from './Auction.json';
+import { ethers } from 'ethers';
+import { abi } from './abi/Auction.json';
 import {
   UpdateListPriceDto,
   UpdateMaxBidNumberDto,
