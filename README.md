@@ -2,7 +2,7 @@
   <img src="https://assets-global.website-files.com/60118ca1c2eab61d24bcf151/6329c748f1e3f02c29c9a2a8_BP%20-%20NA%2BSM%20-%201R%20-%20Full%20(2).png" width="200" alt="Auction Logo" /></a>
 </p>
 
-# Description
+# Auction Blockchain - Backend API
 
 This is a backend [Nest](https://github.com/nestjs/nest) project using Prisma ORM to database migrations
 
